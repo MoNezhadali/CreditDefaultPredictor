@@ -1,3 +1,7 @@
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+
 def handle_missing_values(data):
     for column in data.columns:
         if data[column].dtype == 'object':  # Categorical column
@@ -29,5 +33,20 @@ def handle_outliers(data):
             data[column] = data[column].clip(lower_bound[column], upper_bound[column])
     return data
 
-def save_data(data, output_path):
-    data.to_csv(output_path, index=False)
+def remove_irrelevant_columns(data):
+    # Identify and list constant features
+    constant_features = [
+        feat for feat in data.columns if data[feat].nunique() == 1
+    ]
+    data = data.drop(constant_features, axis=1)
+
+    numerical_data = data.select_dtypes(include=[np.number]).iloc[:,0:7]
+    # Calculate correlation matrix
+    corr_matrix = numerical_data.corr()
+
+    # Plot heatmap
+    plt.figure(figsize=(12, 8))
+    sns.heatmap(corr_matrix, annot=True, fmt=".2f")
+    plt.show()
+
+    return data

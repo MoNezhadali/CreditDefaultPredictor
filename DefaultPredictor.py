@@ -1,7 +1,10 @@
 import pandas as pd
 
 from InputOutput import load_data,save_data
-from DataCleaningFunctions import remove_missing_values, remove_duplicates
+from DataCleaningFunctions import remove_missing_values, remove_duplicates, \
+    remove_irrelevant_columns
+
+
 
 def main():
     input_file = './Data/train.csv'
@@ -11,6 +14,9 @@ def main():
     # Clearning the data
     data = remove_missing_values(data)
     data = remove_duplicates(data)
+    # Removing irrelevant columns
+    data = remove_irrelevant_columns(data)
+
     # Saving the clean data
     save_data(data, output_file)
     print("Data cleaning and preprocessing completed!")
